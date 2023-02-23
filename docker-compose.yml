@@ -1,0 +1,20 @@
+version : "1"
+services:
+  mysql-demo:
+    image: mysql:5.7.18
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/config:/etc/mysql/conf.d
+
+  demo-service:
+    image: dockerdemo
+    build: .
+    ports:
+      - "8082:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-demo:3306/users_database?autoReconnect=true&useSSL=false
+    depends_on:
+      - mysql-demo
